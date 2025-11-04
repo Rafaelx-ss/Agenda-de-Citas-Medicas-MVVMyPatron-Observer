@@ -2,11 +2,11 @@
 
 Sistema desarrollado en PHP puro implementando la arquitectura **MVVM (Model-View-ViewModel)** y el patrón **Observer** para una gestión eficiente de citas médicas.
 
-## 📋 Descripción
+## Descripción
 
-Aplicación web para gestionar citas médicas que permite crear, editar, cancelar y visualizar citas con actualizaciones en tiempo real mediante el patrón Observer.
+Esta aplicación web proporciona una solución integral para la gestión de citas médicas, permitiendo crear, editar, cancelar y visualizar citas con actualizaciones automáticas mediante la implementación del patrón Observer.
 
-## 🏗️ Arquitectura
+## Arquitectura del Sistema
 
 ### Estructura de Carpetas
 
@@ -32,33 +32,33 @@ tareadedk/
 └── README.md
 ```
 
-## 🔄 Arquitectura MVVM
+## Patrones de Diseño Implementados
 
-### **Model (Modelo)**
+### Model (Modelo)
 - `AppointmentModel`: Maneja la persistencia de datos en formato JSON
 - Extiende `Observable` para notificar cambios a los observadores
 - Operaciones CRUD: create, read, update, delete
 
-### **View (Vista)**
+### View (Vista)
 - `index.php`: Interfaz HTML con JavaScript para interactividad
 - Presenta los datos al usuario de forma amigable
 - Se actualiza automáticamente cuando recibe notificaciones
 
-### **ViewModel (Modelo de Vista)**
+### ViewModel (Modelo de Vista)
 - `AppointmentViewModel`: Lógica de presentación y validación
 - Actúa como intermediario entre Model y View
 - Implementa `ObserverInterface` para recibir actualizaciones del modelo
 - Valida datos antes de enviarlos al modelo
 
-### **Controller (Controlador)**
+### Controller (Controlador)
 - `AppointmentController`: Coordina las operaciones
 - Maneja las peticiones HTTP y delega al ViewModel
 
-## 👁️ Patrón Observer
+## Implementación del Patrón Observer
 
-### Implementación
+### Arquitectura de Notificaciones
 
-El patrón Observer se implementa en tres niveles:
+El patrón Observer se implementa en tres niveles principales:
 
 1. **Model → ViewModel**: 
    - `AppointmentModel` (Observable) notifica cambios a `AppointmentViewModel` (Observer)
@@ -73,16 +73,16 @@ El patrón Observer se implementa en tres niveles:
    - `SubjectInterface`: Define métodos para gestionar observadores
    - `Observable`: Implementación base del patrón
 
-### Justificación del Patrón Observer
+### Ventajas de la Implementación
 
-- **Desacoplamiento**: El modelo no conoce directamente las vistas
-- **Escalabilidad**: Fácil agregar nuevos observadores sin modificar el modelo
-- **Tiempo Real**: Las vistas se actualizan automáticamente cuando cambian los datos
-- **Mantenibilidad**: Cambios en el modelo no requieren modificar las vistas
+- **Desacoplamiento**: El modelo no mantiene referencias directas a las vistas
+- **Escalabilidad**: Facilita la incorporación de nuevos observadores sin modificaciones en el modelo
+- **Actualizaciones Automáticas**: Las vistas se sincronizan automáticamente con los cambios de datos
+- **Mantenibilidad**: Los cambios en el modelo no impactan directamente en las vistas
 
-## 🚀 Instalación
+## Instalación y Configuración
 
-### Requisitos
+### Requisitos del Sistema
 - PHP 7.4 o superior
 - Servidor web (Apache/Nginx) o servidor PHP integrado
 - Composer (opcional, para autoloading)
@@ -112,22 +112,22 @@ El patrón Observer se implementa en tres niveles:
    http://localhost:8000
    ```
 
-## 📝 Funcionalidades
+## Funcionalidades del Sistema
 
 ### Operaciones CRUD
 
-- ✅ **Listar citas**: Visualización de todas las citas programadas
-- ✅ **Crear cita**: Agregar nuevas citas médicas
-- ✅ **Editar cita**: Modificar información de citas existentes
-- ✅ **Cancelar cita**: Cambiar estado a "cancelada"
-- ✅ **Eliminar cita**: Eliminar permanentemente una cita
+- **Listar citas**: Visualización completa de todas las citas programadas
+- **Crear cita**: Registro de nuevas citas médicas en el sistema
+- **Editar cita**: Modificación de información de citas existentes
+- **Cancelar cita**: Actualización de estado a "cancelada"
+- **Eliminar cita**: Eliminación permanente de registros de citas
 
-### Validaciones
+### Validaciones Implementadas
 
-- ✅ Validación de campos requeridos
-- ✅ Validación de formato de fecha y hora
-- ✅ Prevención de citas duplicadas (mismo médico, fecha y hora)
-- ✅ Validación de fecha mínima (no permite fechas pasadas)
+- Validación de campos obligatorios
+- Verificación de formato de fecha y hora
+- Prevención de citas duplicadas (mismo médico, fecha y hora)
+- Validación de fecha mínima (no permite fechas anteriores a la actual)
 
 ### Campos de Cita
 
@@ -138,49 +138,17 @@ El patrón Observer se implementa en tres niveles:
 - **Hora**: Hora de la cita
 - **Estado**: programada, completada, cancelada
 
-## 🔧 Tecnologías Utilizadas
+## Stack Tecnológico
 
-- **PHP 7.4+**: Lenguaje backend
-- **HTML5/CSS3**: Interfaz de usuario
-- **JavaScript (Vanilla)**: Interactividad del cliente
-- **JSON**: Almacenamiento de datos
-- **Composer**: Gestión de dependencias
+- **PHP 7.4+**: Lenguaje de programación del lado del servidor
+- **HTML5/CSS3**: Tecnologías para la interfaz de usuario
+- **JavaScript (Vanilla)**: Funcionalidad de interactividad del lado del cliente
+- **JSON**: Formato de almacenamiento de datos
+- **Composer**: Herramienta de gestión de dependencias
 
-## 📊 Diagrama de Clases
 
-```
-┌─────────────────────┐
-│ ObserverInterface   │
-└─────────────────────┘
-          ▲
-          │ implements
-          │
-┌─────────┴─────────┐
-│  AppointmentModel │      ┌──────────────────┐
-│  (Observable)     │──────│ SubjectInterface │
-└───────────────────┘      └──────────────────┘
-          │
-          │ notifies
-          ▼
-┌─────────────────────┐
-│ AppointmentViewModel │
-│  (Observer)         │
-└─────────────────────┘
-          │
-          │ uses
-          ▼
-┌─────────────────────┐
-│ AppointmentController│
-└─────────────────────┘
-          │
-          │ renders
-          ▼
-┌─────────────────────┐
-│   View (index.php)  │
-└─────────────────────┘
-```
 
-## 🔄 Flujo de Datos
+## Flujo de Datos del Sistema
 
 1. **Usuario interactúa** con la vista (View)
 2. **Vista envía petición** al controlador (Controller)
@@ -190,18 +158,18 @@ El patrón Observer se implementa en tres niveles:
 6. **ViewModel recibe** notificación y actualiza la vista
 7. **Vista se actualiza** automáticamente
 
-## 📸 Capturas de Funcionamiento
+## Características de la Interfaz
 
-La aplicación incluye:
-- Interfaz moderna y responsive
-- Formulario de creación/edición de citas
-- Tabla de visualización de citas
-- Badges de estado (programada, cancelada, completada)
-- Mensajes de éxito/error en tiempo real
+La aplicación proporciona:
+- Interfaz moderna y adaptativa (responsive design)
+- Formulario integrado para creación y edición de citas
+- Tabla de visualización con datos organizados
+- Indicadores de estado visual (programada, cancelada, completada)
+- Sistema de notificaciones en tiempo real para éxito y errores
 
-## 🧪 Pruebas
+## Protocolo de Pruebas
 
-Para probar la aplicación:
+Para verificar el correcto funcionamiento del sistema:
 
 1. Crear una nueva cita
 2. Intentar crear una cita duplicada (mismo médico, fecha y hora) - debe mostrar error
@@ -209,9 +177,9 @@ Para probar la aplicación:
 4. Cancelar una cita
 5. Eliminar una cita
 
-## 📚 Documentación Técnica
+## Documentación Técnica
 
-### Modelo de Datos
+### Estructura del Modelo de Datos
 
 ```json
 {
@@ -231,12 +199,4 @@ Para probar la aplicación:
 - `POST /index.php` con `action: 'cancel'` - Cancelar cita
 - `POST /index.php` con `action: 'delete'` - Eliminar cita
 - `POST /index.php` con `action: 'get'` - Obtener cita por ID
-
-## 👨‍💻 Autor
-
-Desarrollado para Salud Integral - Sistema de Gestión de Citas Médicas
-
-## 📄 Licencia
-
-Este proyecto es de uso educativo y demostrativo.
 
