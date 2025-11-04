@@ -1,6 +1,6 @@
 <?php
 
-interface ObserverInterface {
+interface ObserverInterface
+{
     public function update($data);
 }
-

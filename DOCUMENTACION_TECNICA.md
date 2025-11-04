@@ -13,18 +13,21 @@ La arquitectura **MVVM (Model-View-ViewModel)** separa la lógica de negocio, la
 **Ubicación:** `model/AppointmentModel.php`
 
 **Responsabilidades:**
+
 - Persistencia de datos en formato JSON
 - Operaciones CRUD (Create, Read, Update, Delete)
 - Validación de duplicados
 - Notificación de cambios mediante patrón Observer
 
 **Características:**
+
 - Extiende `Observable` para notificar cambios
 - Almacenamiento en archivo JSON (`data/appointments.json`)
 - Generación automática de IDs
 - Método `checkDuplicate()` para prevenir citas duplicadas
 
 **Ejemplo de uso:**
+
 ```php
 $model = new AppointmentModel();
 $model->create([
@@ -41,12 +44,14 @@ $model->create([
 **Ubicación:** `view/index.php`
 
 **Responsabilidades:**
+
 - Interfaz de usuario (HTML/CSS/JavaScript)
 - Presentación de datos al usuario
 - Captura de interacciones del usuario
 - Actualización visual basada en notificaciones
 
 **Características:**
+
 - Interfaz responsive y moderna
 - Formulario dinámico para crear/editar citas
 - Tabla de visualización de citas
@@ -58,18 +63,21 @@ $model->create([
 **Ubicación:** `viewmodel/AppointmentViewModel.php`
 
 **Responsabilidades:**
+
 - Intermediario entre Model y View
 - Validación de datos antes de enviarlos al modelo
 - Transformación de datos para la vista
 - Implementa Observer para recibir actualizaciones del modelo
 
 **Características:**
+
 - Validación de campos requeridos
 - Validación de formato de fecha y hora
 - Prevención de citas duplicadas
 - Notificación a observadores de la vista
 
 **Ejemplo de uso:**
+
 ```php
 $viewModel = new AppointmentViewModel($model);
 $result = $viewModel->createAppointment($data);
@@ -85,6 +93,7 @@ if ($result['success']) {
 **Ubicación:** `controller/AppointmentController.php`
 
 **Responsabilidades:**
+
 - Coordinar operaciones entre capas
 - Manejar peticiones HTTP
 - Delegar operaciones al ViewModel
@@ -136,10 +145,11 @@ El patrón Observer es un patrón de diseño de comportamiento que define una de
 #### Flujo de Notificaciones
 
 1. **Model → ViewModel:**
+
    ```php
    // En AppointmentModel
    $this->notify(['action' => 'create', 'data' => $appointment]);
-   
+
    // ViewModel recibe la notificación
    public function update($data) {
        // Procesar notificación
@@ -240,9 +250,9 @@ Model      ViewModel    ViewObserver    View
 ```json
 {
   "id": 1,
-  "patient_name": "Juan Pérez",
-  "doctor": "Dr. Juan Pérez - Cardiología",
-  "date": "2024-01-15",
+  "patient_name": "Luis Diaz",
+  "doctor": "Dr. Gabriel Guerrero - Ortopedia",
+  "date": "2025-11-04",
   "time": "10:00",
   "status": "programada"
 }
@@ -259,16 +269,19 @@ Model      ViewModel    ViewObserver    View
 ### Validaciones del ViewModel
 
 1. **Campos Requeridos:**
+
    - Nombre del paciente
    - Médico
    - Fecha
    - Hora
 
 2. **Formato de Fecha:**
+
    - Validación con `strtotime()`
    - Solo fechas futuras (validación en JavaScript)
 
 3. **Formato de Hora:**
+
    - Expresión regular: `/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/`
    - Formato 24 horas (HH:MM)
 
@@ -283,19 +296,23 @@ Model      ViewModel    ViewObserver    View
 ### Posibles Mejoras
 
 1. **Base de Datos:**
+
    - Migrar de JSON a MySQL/PostgreSQL
    - Agregar migraciones de base de datos
 
 2. **Autenticación:**
+
    - Sistema de usuarios
    - Roles (admin, médico, recepcionista)
 
 3. **Notificaciones:**
+
    - Email al paciente
    - SMS de recordatorio
    - Notificaciones push
 
 4. **Reportes:**
+
    - Estadísticas de citas
    - Historial de pacientes
    - Calendario de médicos
@@ -310,4 +327,3 @@ Model      ViewModel    ViewObserver    View
 Este sistema demuestra una implementación clara y funcional de la arquitectura MVVM junto con el patrón Observer en PHP puro. La separación de responsabilidades facilita el mantenimiento, la escalabilidad y la extensibilidad del código.
 
 El patrón Observer permite que el sistema sea reactivo y actualice automáticamente las vistas cuando hay cambios en los datos, proporcionando una experiencia de usuario fluida y en tiempo real.
-

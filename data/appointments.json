@@ -1,1 +1,18 @@
-[]
+[
+    {
+        "id": 1,
+        "patient_name": "Rafa",
+        "doctor": "Dr. Alexander Bolio - Ginecolog\u00eda",
+        "date": "2025-11-04",
+        "time": "19:10",
+        "status": "programada"
+    },
+    {
+        "id": 2,
+        "patient_name": "Pepe",
+        "doctor": "Dr. Miguel Canto - Pediatr\u00eda",
+        "date": "2025-11-12",
+        "time": "20:10",
+        "status": "completada"
+    }
+]

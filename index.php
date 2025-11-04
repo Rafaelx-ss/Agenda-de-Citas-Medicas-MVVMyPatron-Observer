@@ -7,7 +7,7 @@ $controller = new AppointmentController();
 // Manejar solicitudes AJAX
 if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT' || $_SERVER['REQUEST_METHOD'] === 'DELETE') {
     header('Content-Type: application/json');
-    
+
     $input = json_decode(file_get_contents('php://input'), true);
     if (!$input && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $input = $_POST;
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT
             $result = $controller->create($input);
             echo json_encode($result);
             exit;
-            
+
         case 'update':
             if ($id) {
                 $result = $controller->update($id, $input);
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT
                 echo json_encode(['success' => false, 'errors' => ['ID requerido']]);
             }
             exit;
-            
+
         case 'cancel':
             if ($id) {
                 $result = $controller->cancel($id);
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT
                 echo json_encode(['success' => false, 'errors' => ['ID requerido']]);
             }
             exit;
-            
+
         case 'delete':
             if ($id) {
                 $result = $controller->delete($id);
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT
                 echo json_encode(['success' => false, 'errors' => ['ID requerido']]);
             }
             exit;
-            
+
         case 'get':
             if ($id) {
                 $appointment = $controller->show($id);
@@ -63,4 +63,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT
 // Si es GET, mostrar la vista
 $appointments = $controller->index();
 include __DIR__ . '/view/index.php';
-
