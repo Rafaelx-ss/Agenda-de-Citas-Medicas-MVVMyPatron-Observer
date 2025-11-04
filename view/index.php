@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
 
@@ -213,11 +214,11 @@
             .form-row {
                 grid-template-columns: 1fr;
             }
-            
+
             .appointments-table {
                 font-size: 14px;
             }
-            
+
             .appointments-table th,
             .appointments-table td {
                 padding: 10px;
@@ -225,6 +226,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -242,7 +244,7 @@
                 <h2 id="formTitle">Nueva Cita</h2>
                 <form id="appointmentFormElement" onsubmit="saveAppointment(event)">
                     <input type="hidden" id="appointmentId" name="id">
-                    
+
                     <div class="form-group">
                         <label for="patient_name">Nombre del Paciente *</label>
                         <input type="text" id="patient_name" name="patient_name" required>
@@ -252,11 +254,11 @@
                         <label for="doctor">Médico *</label>
                         <select id="doctor" name="doctor" required>
                             <option value="">Seleccione un médico</option>
-                            <option value="Dr. Juan Pérez - Cardiología">Dr. Juan Pérez - Cardiología</option>
-                            <option value="Dra. María González - Pediatría">Dra. María González - Pediatría</option>
-                            <option value="Dr. Carlos Rodríguez - Dermatología">Dr. Carlos Rodríguez - Dermatología</option>
-                            <option value="Dra. Ana Martínez - Ginecología">Dra. Ana Martínez - Ginecología</option>
-                            <option value="Dr. Luis Fernández - Ortopedia">Dr. Luis Fernández - Ortopedia</option>
+                            <option value="Dr. Pepe Pol - Cardiología">Dr. Pepe Pol - Cardiología</option>
+                            <option value="Dr. Miguel Canto - Pediatría">Dr. Miguel Canto - Pediatría</option>
+                            <option value="Dr. Ariel Mantinez - Dermatología">Dr. Ariel Mantinez - Dermatología</option>
+                            <option value="Dr. Alexander Bolio - Ginecología">Dr. Alexander Bolio - Ginecología</option>
+                            <option value="Dr. Gabriel Guerrero - Ortopedia">Dr. Gabriel Guerrero - Ortopedia</option>
                         </select>
                     </div>
 
@@ -356,7 +358,7 @@
         function toggleForm() {
             const form = document.getElementById('appointmentForm');
             const btn = document.getElementById('toggleFormBtn');
-            
+
             if (form.classList.contains('active')) {
                 form.classList.remove('active');
                 btn.textContent = '➕ Nueva Cita';
@@ -378,7 +380,7 @@
 
         function saveAppointment(event) {
             event.preventDefault();
-            
+
             const formData = new FormData(event.target);
             const data = {
                 action: editingId ? 'update' : 'create',
@@ -391,62 +393,67 @@
             };
 
             fetch('index.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    showMessage(editingId ? 'Cita actualizada exitosamente' : 'Cita creada exitosamente');
-                    cancelForm();
-                    toggleForm();
-                    loadAppointments();
-                } else {
-                    const errors = result.errors ? result.errors.join('<br>') : 'Error al guardar la cita';
-                    showMessage(errors, 'error');
-                }
-            })
-            .catch(error => {
-                showMessage('Error de conexión: ' + error.message, 'error');
-            });
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showMessage(editingId ? 'Cita actualizada exitosamente' : 'Cita creada exitosamente');
+                        cancelForm();
+                        toggleForm();
+                        loadAppointments();
+                    } else {
+                        const errors = result.errors ? result.errors.join('<br>') : 'Error al guardar la cita';
+                        showMessage(errors, 'error');
+                    }
+                })
+                .catch(error => {
+                    showMessage('Error de conexión: ' + error.message, 'error');
+                });
         }
 
         function editAppointment(id) {
             fetch('index.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ action: 'get', id: id })
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success && result.data) {
-                    const appointment = result.data;
-                    editingId = appointment.id;
-                    document.getElementById('appointmentId').value = appointment.id;
-                    document.getElementById('patient_name').value = appointment.patient_name;
-                    document.getElementById('doctor').value = appointment.doctor;
-                    document.getElementById('date').value = appointment.date;
-                    document.getElementById('time').value = appointment.time;
-                    document.getElementById('status').value = appointment.status;
-                    document.getElementById('formTitle').textContent = 'Editar Cita';
-                    
-                    const form = document.getElementById('appointmentForm');
-                    if (!form.classList.contains('active')) {
-                        toggleForm();
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'get',
+                        id: id
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success && result.data) {
+                        const appointment = result.data;
+                        editingId = appointment.id;
+                        document.getElementById('appointmentId').value = appointment.id;
+                        document.getElementById('patient_name').value = appointment.patient_name;
+                        document.getElementById('doctor').value = appointment.doctor;
+                        document.getElementById('date').value = appointment.date;
+                        document.getElementById('time').value = appointment.time;
+                        document.getElementById('status').value = appointment.status;
+                        document.getElementById('formTitle').textContent = 'Editar Cita';
+
+                        const form = document.getElementById('appointmentForm');
+                        if (!form.classList.contains('active')) {
+                            toggleForm();
+                        }
+                        form.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        showMessage('Error al cargar la cita', 'error');
                     }
-                    form.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                    showMessage('Error al cargar la cita', 'error');
-                }
-            })
-            .catch(error => {
-                showMessage('Error de conexión: ' + error.message, 'error');
-            });
+                })
+                .catch(error => {
+                    showMessage('Error de conexión: ' + error.message, 'error');
+                });
         }
 
         function cancelAppointment(id) {
@@ -455,25 +462,28 @@
             }
 
             fetch('index.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ action: 'cancel', id: id })
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    showMessage('Cita cancelada exitosamente');
-                    loadAppointments();
-                } else {
-                    const errors = result.errors ? result.errors.join('<br>') : 'Error al cancelar la cita';
-                    showMessage(errors, 'error');
-                }
-            })
-            .catch(error => {
-                showMessage('Error de conexión: ' + error.message, 'error');
-            });
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'cancel',
+                        id: id
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showMessage('Cita cancelada exitosamente');
+                        loadAppointments();
+                    } else {
+                        const errors = result.errors ? result.errors.join('<br>') : 'Error al cancelar la cita';
+                        showMessage(errors, 'error');
+                    }
+                })
+                .catch(error => {
+                    showMessage('Error de conexión: ' + error.message, 'error');
+                });
         }
 
         function deleteAppointment(id) {
@@ -482,25 +492,28 @@
             }
 
             fetch('index.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ action: 'delete', id: id })
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    showMessage('Cita eliminada exitosamente');
-                    loadAppointments();
-                } else {
-                    const errors = result.errors ? result.errors.join('<br>') : 'Error al eliminar la cita';
-                    showMessage(errors, 'error');
-                }
-            })
-            .catch(error => {
-                showMessage('Error de conexión: ' + error.message, 'error');
-            });
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'delete',
+                        id: id
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        showMessage('Cita eliminada exitosamente');
+                        loadAppointments();
+                    } else {
+                        const errors = result.errors ? result.errors.join('<br>') : 'Error al eliminar la cita';
+                        showMessage(errors, 'error');
+                    }
+                })
+                .catch(error => {
+                    showMessage('Error de conexión: ' + error.message, 'error');
+                });
         }
 
         function loadAppointments() {
@@ -515,5 +528,5 @@
         });
     </script>
 </body>
-</html>
 
+</html>

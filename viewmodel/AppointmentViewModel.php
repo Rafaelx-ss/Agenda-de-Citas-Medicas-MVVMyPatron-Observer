@@ -3,26 +3,31 @@
 require_once __DIR__ . '/../observer/ObserverInterface.php';
 require_once __DIR__ . '/../model/AppointmentModel.php';
 
-class AppointmentViewModel implements ObserverInterface {
+class AppointmentViewModel implements ObserverInterface
+{
     private $model;
     private $viewObservers = [];
 
-    public function __construct(AppointmentModel $model) {
+    public function __construct(AppointmentModel $model)
+    {
         $this->model = $model;
         $this->model->attach($this);
     }
 
-    public function getAllAppointments() {
+    public function getAllAppointments()
+    {
         return $this->model->getAll();
     }
 
-    public function getAppointmentById($id) {
+    public function getAppointmentById($id)
+    {
         return $this->model->getById($id);
     }
 
-    public function createAppointment($data) {
+    public function createAppointment($data)
+    {
         $errors = $this->validate($data);
-        
+
         if (!empty($errors)) {
             return ['success' => false, 'errors' => $errors];
         }
@@ -35,9 +40,10 @@ class AppointmentViewModel implements ObserverInterface {
         return ['success' => true, 'data' => $appointment];
     }
 
-    public function updateAppointment($id, $data) {
+    public function updateAppointment($id, $data)
+    {
         $errors = $this->validate($data, $id);
-        
+
         if (!empty($errors)) {
             return ['success' => false, 'errors' => $errors];
         }
@@ -47,41 +53,44 @@ class AppointmentViewModel implements ObserverInterface {
         }
 
         $appointment = $this->model->update($id, $data);
-        
+
         if ($appointment) {
             return ['success' => true, 'data' => $appointment];
         }
-        
+
         return ['success' => false, 'errors' => ['Cita no encontrada']];
     }
 
-    public function cancelAppointment($id) {
+    public function cancelAppointment($id)
+    {
         $appointment = $this->model->getById($id);
-        
+
         if (!$appointment) {
             return ['success' => false, 'errors' => ['Cita no encontrada']];
         }
 
         $result = $this->model->update($id, ['status' => 'cancelada']);
-        
+
         if ($result) {
             return ['success' => true, 'data' => $result];
         }
-        
+
         return ['success' => false, 'errors' => ['Error al cancelar la cita']];
     }
 
-    public function deleteAppointment($id) {
+    public function deleteAppointment($id)
+    {
         $result = $this->model->delete($id);
-        
+
         if ($result) {
             return ['success' => true];
         }
-        
+
         return ['success' => false, 'errors' => ['Cita no encontrada']];
     }
 
-    private function validate($data, $id = null) {
+    private function validate($data, $id = null)
+    {
         $errors = [];
 
         if (empty($data['patient_name'])) {
@@ -107,19 +116,21 @@ class AppointmentViewModel implements ObserverInterface {
         return $errors;
     }
 
-    public function update($data) {
+    public function update($data)
+    {
         // Notificar a todos los observadores de la vista
         foreach ($this->viewObservers as $observer) {
             $observer->update($data);
         }
     }
 
-    public function attachViewObserver(ObserverInterface $observer) {
+    public function attachViewObserver(ObserverInterface $observer)
+    {
         $this->viewObservers[] = $observer;
     }
 
-    public function getModel() {
+    public function getModel()
+    {
         return $this->model;
     }
 }
-

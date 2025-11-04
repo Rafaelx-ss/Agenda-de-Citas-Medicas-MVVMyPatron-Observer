@@ -2,17 +2,19 @@
 
 require_once __DIR__ . '/../observer/Observable.php';
 
-class AppointmentModel extends Observable {
+class AppointmentModel extends Observable
+{
     private $dataFile;
     private $appointments = [];
 
-    public function __construct($dataFile = null) {
-        parent::__construct();
+    public function __construct($dataFile = null)
+    {
         $this->dataFile = $dataFile ?? __DIR__ . '/../data/appointments.json';
         $this->loadData();
     }
 
-    private function loadData() {
+    private function loadData()
+    {
         if (file_exists($this->dataFile)) {
             $content = file_get_contents($this->dataFile);
             $this->appointments = json_decode($content, true) ?: [];
@@ -22,7 +24,8 @@ class AppointmentModel extends Observable {
         }
     }
 
-    private function saveData() {
+    private function saveData()
+    {
         $dir = dirname($this->dataFile);
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
@@ -30,11 +33,13 @@ class AppointmentModel extends Observable {
         file_put_contents($this->dataFile, json_encode($this->appointments, JSON_PRETTY_PRINT));
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         return $this->appointments;
     }
 
-    public function getById($id) {
+    public function getById($id)
+    {
         foreach ($this->appointments as $appointment) {
             if ($appointment['id'] == $id) {
                 return $appointment;
@@ -43,7 +48,8 @@ class AppointmentModel extends Observable {
         return null;
     }
 
-    public function create($data) {
+    public function create($data)
+    {
         $id = $this->generateId();
         $appointment = [
             'id' => $id,
@@ -53,14 +59,15 @@ class AppointmentModel extends Observable {
             'time' => $data['time'],
             'status' => $data['status'] ?? 'programada'
         ];
-        
+
         $this->appointments[] = $appointment;
         $this->saveData();
         $this->notify(['action' => 'create', 'data' => $appointment]);
         return $appointment;
     }
 
-    public function update($id, $data) {
+    public function update($id, $data)
+    {
         foreach ($this->appointments as &$appointment) {
             if ($appointment['id'] == $id) {
                 $appointment['patient_name'] = $data['patient_name'] ?? $appointment['patient_name'];
@@ -68,7 +75,7 @@ class AppointmentModel extends Observable {
                 $appointment['date'] = $data['date'] ?? $appointment['date'];
                 $appointment['time'] = $data['time'] ?? $appointment['time'];
                 $appointment['status'] = $data['status'] ?? $appointment['status'];
-                
+
                 $this->saveData();
                 $this->notify(['action' => 'update', 'data' => $appointment]);
                 return $appointment;
@@ -77,7 +84,8 @@ class AppointmentModel extends Observable {
         return null;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         foreach ($this->appointments as $key => $appointment) {
             if ($appointment['id'] == $id) {
                 $deleted = $this->appointments[$key];
@@ -91,22 +99,26 @@ class AppointmentModel extends Observable {
         return false;
     }
 
-    public function checkDuplicate($date, $time, $doctor, $excludeId = null) {
+    public function checkDuplicate($date, $time, $doctor, $excludeId = null)
+    {
         foreach ($this->appointments as $appointment) {
             if ($excludeId && $appointment['id'] == $excludeId) {
                 continue;
             }
-            if ($appointment['date'] == $date && 
-                $appointment['time'] == $time && 
+            if (
+                $appointment['date'] == $date &&
+                $appointment['time'] == $time &&
                 $appointment['doctor'] == $doctor &&
-                $appointment['status'] != 'cancelada') {
+                $appointment['status'] != 'cancelada'
+            ) {
                 return true;
             }
         }
         return false;
     }
 
-    private function generateId() {
+    private function generateId()
+    {
         if (empty($this->appointments)) {
             return 1;
         }
@@ -114,4 +126,3 @@ class AppointmentModel extends Observable {
         return $maxId + 1;
     }
 }
-
